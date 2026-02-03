@@ -1,0 +1,44 @@
+// This is your Prisma schema file primary for Hubbe Web Panel
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model EventCategory {
+  id     Int     @id @default(autoincrement())
+  name   String  @unique
+  color  String?
+  events Event[]
+}
+
+model Event {
+  id          Int            @id @default(autoincrement())
+  title       String
+  start       DateTime
+  end         DateTime?
+  color       String?
+  categoryId  Int?
+  category    EventCategory? @relation(fields: [categoryId], references: [id])
+}
+
+model Team {
+  id       Int     @id @default(autoincrement())
+  name     String  @unique
+  category String? // Upper, Tech, Lower
+  order    Int    @default(0)
+  staff    Staff[]
+}
+
+model Staff {
+  id        Int     @id @default(autoincrement())
+  name      String
+  badgeCode String?
+  imageUrl  String?
+  order     Int    @default(0)
+  teamId    Int
+  team      Team    @relation(fields: [teamId], references: [id])
+}
